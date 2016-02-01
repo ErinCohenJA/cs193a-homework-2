@@ -10,33 +10,36 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements AdapterView.OnItemLongClickListener{
+
     private ArrayList<String> arraylist = new ArrayList<>();
-    private ArrayAdapter<String> adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, arraylist);
-    ListView list = (ListView) findViewById(R.id.list);
-    implements AdapterView.OnItemClickListener{
-        list.setOnClickListener(this);
-    }
+    private ArrayAdapter<String> adapter;
+    private ListView taskList;
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        list.setAdapter(adapter)
+        taskList = (ListView) findViewById(R.id.list);
+        taskList.setOnItemLongClickListener(this);
+        adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, arraylist);
+        taskList.setAdapter(adapter);
     }
 
     public void add(View view) {
-        String item = (EditText)findViewById(R.id.keyboard).toString();
-        arraylist.add(item);
+        EditText item = (EditText)findViewById(R.id.keyboard);
+        String editItem = item.getText().toString();
+        arraylist.add(editItem);
         adapter.notifyDataSetChanged();
 
     }
 
     @Override
-    public void onItemClick(AdapterView<android.widget.Adapter> list, View row, int index, long rowID){
-        list.removeViewAt(index);
+    public boolean onItemLongClick(AdapterView<?> list, View row, int index, long rowID){
         arraylist.remove(index);
         adapter.notifyDataSetChanged();
+        return true;
     }
 }
